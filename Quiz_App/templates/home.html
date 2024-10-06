@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Quiz Competition</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4/dist/reveal.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4/dist/theme/white.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <style>
+            .container-fluid.center {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh; /* Set to 100% of the viewport height for vertical centering */
+                text-align: center; /* Optional: Center-align text within the container */
+            }
+            h1 {
+                font-size: 5em; /* Adjust the font size as needed */
+            }
+        
+            p {
+                font-size: 3em; /* Adjust the font size as needed */
+            }
+            body {
+                background-color: #8b11f0;
+                color: white;
+                /* You can adjust the shade of purple as needed */
+            }
+        </style>
+    </head>
+    <body>
+        <div class="px-3">
+            <div class="container-fluid center">
+                    <h1>Welcome Guy's</h1>
+                    <p>Good Morning</p>   
+                    <a href="{% url 'quiz_question' question.qid|add:'1' %}" class="btn btn-outline-light">Start Quiz</a>
+            </div>  
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script>
+            Reveal.initialize();
+        </script> 
+    </body>
+</html>
+

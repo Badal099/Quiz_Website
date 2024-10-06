@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Quiz Competition</title>
+        <!-- Include SweetAlert library -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4/dist/reveal.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4/dist/theme/white.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <style>
+            button.btn {
+                font-size: 25px; /* Adjust the font size as needed */
+                padding: 15px 20px; /* Adjust the padding to increase button size */
+                margin: 5px; /* Add margin for spacing between buttons */
+            }
+            body {
+                background-color: #8b11f0;
+            }
+            .footer-buttons {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: #8b11f0;
+                padding: 10px;
+                text-align: right;
+            }
+    
+            .footer-buttons a {
+                margin-left: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="container-fluid">
+                <section>
+                    <div style="color: white";>Q. {{ question.question_text }}</div>
+                    <br>
+                    <div class="bd-example">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="question_id" value="{{ question.qid }}">
+                            <div class="container">
+                                <div class="row">
+                                  <div class="d-grid gap-2 col-6 mx-auto">
+                                    <button type="submit" name="answer" value="{{question.option1}}" class="btn btn-outline-light">{{question.option1}}</button>
+                                  </div>
+                                  <div class="d-grid gap-2 col-6 mx-auto">
+                                    <button type="submit" name="answer" value="{{question.option2}}" class="btn btn-outline-light">{{question.option2}}</button>
+                                  </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                  <div class="d-grid gap-2 col-6 mx-auto">
+                                    <button type="submit" name="answer" value="{{question.option3}}" class="btn btn-outline-light">{{question.option3}}</button>
+                                  </div>
+                                  <div class="d-grid gap-2 col-6 mx-auto">
+                                    <button type="submit" name="answer" value="{{question.option4}}" class="btn btn-outline-light">{{question.option4}}</button>
+                                  </div>
+                                </div>
+                              </div>  
+                        </form>
+                    </div>
+                    <div class="footer-buttons">
+                        {% with previous_question_id=question.qid|add:'-1' %}
+                            <a href="{% url 'quiz_question' question.qid|add:'-1' %}" class="btn btn-outline-light {% if previous_question_id < 1 %}disabled{% endif %}">Previous</a>
+                        {% endwith %}
+                        {% with next_question_id=question.qid|add:'1' %}
+                        {% if next_question_id == 16 %}
+                            <a href="{% url 'thanks' %}" class="btn btn-outline-light">Quiz Completed</a>
+                        {% else %}
+                            <a href="{% url 'quiz_question' next_question_id %}" class="btn btn-outline-light">Next</a>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </section>
+        </div>
+        </div>
+        <!-- Include SweetAlert script -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script>
+            Reveal.initialize();
+        </script> 
+        {% if error == "no" %}
+        <script>
+            var end = Date.now() + (2 * 1000);
+
+            // go Buckeyes!
+            var colors = ['#fd1d1d', '#ffffff'];
+
+            (function frame() {
+            confetti({
+                particleCount: 2,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: colors
+            });
+            confetti({
+                particleCount: 2,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: colors
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+            }());
+
+            Swal.fire({
+                title: 'Great job...!',
+                text: 'Congratulations...! Your answer is Correct.',
+                icon: 'success',
+                confirmButtonText: 'Continue'
+            }).then((result) => {
+                {% with next_question_id=question.qid|add:'1' %}
+                {% if next_question_id == 16 %}
+                if (result.isConfirmed) {
+                    window.location.href = ("{% url 'thanks' %}");
+                }
+                {% else %}
+                if (result.isConfirmed) {
+                    window.location.href = ("{% url 'quiz_question' next_question_id %}");
+                }
+                {% endif %}
+                {% endwith %}
+            });
+        </script>
+        {% endif %}
+        {% if error == "yes" %}
+        <script>
+            Swal.fire({
+                title: 'Oops...!',
+                text: 'Your answer is Incorrect. Better Luck Next Time!',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        </script>
+        {% endif %}
+    </body>
+</html>
+
+    
